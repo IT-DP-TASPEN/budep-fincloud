@@ -41,8 +41,11 @@ class ListMasterDepositos extends ListRecords
                 ->modalDescription('Proses ini akan mengambil data semua CIF dari tabel Master CIF.')
                 ->modalSubmitActionLabel('Mulai Sync')
                 ->action(function () {
-                    $url = 'http://172.22.80.18:17000/v2/account/deposit/list';
-                    $cifs = ['00500000283','00100000304'];
+                    // DEV
+                    // $url = 'http://172.22.80.18:17000/v2/account/deposit/list';
+                    // Prod
+                    $url = 'http://172.20.57.5:17000/v2/account/deposit/list';
+                    $cifs = ['00600000448','00700000178'];
                     // $cifs = MasterCif::pluck('cif')->toArray();
 
                     if (empty($cifs)) {
@@ -150,7 +153,7 @@ class ListMasterDepositos extends ListRecords
                             } catch (\Throwable $e) {
                                 Log::error("❌ Error sinkronisasi CIF {$cif}: {$e->getMessage()}");
                                 SyncLog::create([
-                                    'user_id'     => auth()->name(),
+                                    'user_id'     => auth()->id(),
                                     'cif_no'      => $cif,
                                     'response'    => json_encode(['error' => $e->getMessage()]),
                                     'status'      => 'error',
